@@ -85,10 +85,10 @@ export default new Vuex.Store({
             product.inventory--
         },
         emptyCart(state) {
-
+            state.cart = []
         },
-        setCheckoutStatus(state) {
-
+        setCheckoutStatus(state, status) {
+            state.checkoutStatus = status
         }
     }
 })
