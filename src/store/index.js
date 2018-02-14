@@ -6,11 +6,29 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: { //data
-        products: []
+        products: [],
+        cart: []
     },
     getters: { // computed properties
         availableProducts (state, getters) {
             return state.products.filter(product => product.inventory > 0)
+        },
+        cartProducts (state, getters) {
+            return state.cart.map(cartItem => {
+                const product = state.products.find(product => product.id === cartItem.id)
+                return {
+                    title: product.title,
+                    price: product.price,
+                    quantity: cartItem.quantity
+                }
+            })
+        },
+        cartTotal(state, getters) {
+            let total = 0
+            getters.cartProducts.forEach(product => {
+                total += product.price * product.quantity
+            })
+            return total
         }
     },
     actions: {
@@ -22,9 +40,15 @@ export default new Vuex.Store({
                 })
             })
         },
-        addToCart(context, product) {
+        addProductToCart(context, product) {
             if (product.inventory > 0) {
-                context.commit('pushProductToCart', product)
+                const cartItem = context.state.cart.find(item => item.id === product.id)
+                if(!cartItem) {
+                    context.commit('pushProductToCart', product.id)
+                } else {
+                    context.commit('incrementItemQuantity', cartItem)
+                }
+                context.commit('decrementProductInventory', product)
             } else {
                 // show out of stock message
             }
@@ -35,8 +59,17 @@ export default new Vuex.Store({
         setProducts(state, products) {
             state.products = products
         },
-        pushProductToCart(state, product) {
-
+        pushProductToCart(state, productId) {
+            state.cart.push({
+                id: productId,
+                quantity: 1
+            })
+        },
+        incrementItemQuantity(state, cartItem) {
+            cartItem.quantity++
+        },
+        decrementProductInventory(state, product) {
+            product.inventory--
         }
     }
 })
