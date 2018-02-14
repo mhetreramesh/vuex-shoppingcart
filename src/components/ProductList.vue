@@ -8,7 +8,9 @@
   <ul v-else>
     <li v-for="product in products">
       {{ product.title }} - {{ product.price | currency }} - {{ product.inventory }}
-      <button @click="addProductToCart(product)">Add to cart </button>
+      <button 
+        :disabled="!product.inventory > 0"
+        @click="addProductToCart(product)">Add to cart </button>
     </li>
   </ul>
   </div>
