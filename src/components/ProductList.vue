@@ -23,7 +23,7 @@ export default {
     },
     computed: {
         products() {
-            return this.$store.getters.availableProducts
+            return this.$store.state.products
         }
     },
     methods: {
