@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: { //data
-        products: []
+        products: [],
+        cart: []
     },
     getters: { // computed properties
         availableProducts (state, getters) {
